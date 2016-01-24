@@ -67,6 +67,10 @@ run l = do
 
 inM m = OL $ \e -> m
 
+instance Ref m r => Applicative (OrderedList m r a) where
+  pure  = return
+  (<*>) = ap
+
 instance Ref m r => Monad (OrderedList m r a) where
   return a = inM (return a)
   (OL m) >>= f = OL $ \e -> m e >>= \a -> deOL (f a) e

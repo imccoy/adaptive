@@ -86,6 +86,10 @@ instance Ref m r => Ref (Changeable m r) r where
   readRef x    = inM $ readRef x
   writeRef x v = inM $ writeRef x v
 
+instance Ref m r => Applicative (Changeable m r) where
+  pure  = return
+  (<*>) = ap
+
 instance Ref m r => Monad (Changeable m r) where
   return a   = Ch $ \k -> k a
   Ch m >>= f = Ch $ \k -> m $ \a -> deCh (f a) k
@@ -97,6 +101,10 @@ instance Ref m r => Ref (Adaptive m r) r where
   newRef v     = inM $ newRef v
   readRef x    = inM $ readRef x
   writeRef x v = inM $ writeRef x v
+
+instance Ref m r => Applicative (Adaptive m r) where
+  pure = return
+  (<*>) = ap
 
 instance Ref m r => Monad (Adaptive m r) where
   return a   = Ad $ \e -> return a
